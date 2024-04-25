@@ -94,6 +94,77 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board, 
 								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
 {
-//add your solution here!
+	//add your solution here!
+	// a <--> b <--> c(abc) <--> d
+	// 1. check current letter, if it is a prefix with parent letters
+	// 2. if it is prefix, continue recursion; if not prefix, return false.
+	// 3. check ret = recurs(), if false, check if current prefix is a word. add...
+	// 4. if ret is true, return true.
+	if (r == board.size() || c == board.size()) {
+		return false;
+	}
 
+	bool ret;
+	word.push_back(board[r][c]);
+	if(word.size() == 1){
+		ret = boggleHelper(dict, prefix, board, word, result, r+dr, c+dc, dr, dc);
+	}else{
+		if (prefix.find(word) != prefix.end()){
+			ret = boggleHelper(dict, prefix, board, word, result, r+dr, c+dc, dr, dc);
+		}else{
+			if (dict.find(word) != dict.end()){
+				result.insert(word);
+				return true;
+			}else{
+				return false;
+			}
+		}
+	}
+
+	if (ret == false){
+		if (dict.find(word) != dict.end()){
+			result.insert(word);
+			return true;
+		}else{
+			return false;
+		}
+	}else{
+		return true;
+	}
+	
+
+
+
+
+
+
+
+
+	// if one letter {
+	// 	ret = just recurse 
+	// }else{
+	// 	if (word+current letter is in prefix){
+	// 		bool ret = recurse;
+	// 	}else{
+	// 		if (word+current letter is word){
+	// 			result.add word;
+	// 			return true;
+	// 		}else{
+	// 			return false;
+	// 		}
+	// 	}
+	// }
+
+	
+
+	// if ret == false{
+	// 	if (word is in dict){
+	// 		result.add word;
+	// 		return true;
+	// 	}else{
+	// 		return false;
+	// 	}
+	// }else{
+	// 	return true;
+	// }
 }
