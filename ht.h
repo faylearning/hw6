@@ -233,8 +233,7 @@ public:
     void reportAll(std::ostream& out) const;
     void clearTotalProbes() { totalProbes_ = 0; }
     size_t totalProbes() const { return totalProbes_; }
-//private:
-public:
+private:
     /**
      * @brief Helper routine to find a given key
      * 
@@ -367,7 +366,7 @@ void HashTable<K,V,Prober,Hash,KEqual>::insert(const ItemType& p)
 
     // std::cout << this->size() << " " << this->tableSize_ << " " << this->resizeAlpha_ << std::endl;
 
-    if(((float)(this->size() + deleteCount_) / (float)(this->tableSize_)) > (this->resizeAlpha_)){
+    if(((float)(this->size() + deleteCount_) / (float)(this->tableSize_)) >= (this->resizeAlpha_)){
         this->resize();
     }
 

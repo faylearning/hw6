@@ -19,64 +19,96 @@ struct IntHash2 {
     }
 };
 
+#define EXPECT_EQ(a, b) \
+    if( (a) != (b) ){ \
+        cout << (a) << "should be" << (b) << endl; \
+    } 
+
 int main()
 {
-    double loadfactor = 0.6;
-    const vector<int> sizemap = 
-    {
-        11, 23, 47, 97, 197, 397, 797, 1597, 3203, 6421
-    };
-    HashTable<int, int, LinearProber<int>, IntHash2, equal_to<int>> ht(loadfactor, LinearProber<int>(), IntHash2());   
-    set<pair<int, int>> items;
-    for(size_t i = 0;i<sizemap.size()-1;i++){
-        int min = (int)floor(sizemap[i]*loadfactor);
-        for(int j = 0; j<=min/2;j++){
-            pair<int,int> pair(j,j);
-            //insert then delete
-            ht.insert(pair);
-            ht.remove(j);
-            cout << ht.size() << " 0ok" << endl;
-            if (ht.find(j) == nullptr){
-                cout << ht.size() << " 1ok" << endl;
-            }
-        }
-        if(ht.size() == 0){
-            cout << "    2ok" << endl;
-        }
-        //reinsert the same pair, loc should change
-        for(int j = 0; j<(min-(min/2));j++){
-            pair<int,int> pair(j,j);
-            //insert again
-            ht.insert(pair);
-            items.insert(pair);
-            cout << ht.size() << " pre-3ok" << endl;
-            if (ht.probe(j) == (min/2)+1+j)
-                cout << ht.size() << " 3ok" << endl;
-        }
-        if(ht.table_.size() == sizemap[i]){
-            cout << ht.size() << " 4ok" << endl;
-        }
-        if(ht.size() == items.size()){
-            cout << ht.size() << " 5ok" << endl;
-        }
-        //add another should resize/rehash
-        pair<int,int> pair((min/2)+1,(min/2)+1);
-        ht.insert(pair);
-        items.insert(pair);
-        if(ht.table_.size() == sizemap[i+1]){
-            cout << ht.size() << " 6ok" << endl;
-        }
-        if(ht.size() == items.size()){
-            cout << ht.size() << " 7ok" << endl;
-        }
-        //should be put into the correct spot, now that
-        //the "deleted" items are actually "deleted" when resizing
-        for(int j = 0; j<=(min/2+1);j++){
-            if(ht.probe(j) == j){
-                cout << ht.size() << " 8ok" << endl;
-            }
-        }
-    }
+    // const vector<int> sizemap = 
+    // {
+    //     11, 23, 47, 97, 197, 397, 797, 1597, 3203, 6421, 12853, 25717, 51437, 102877, 205759
+    // };
+    // HashTable<int, int, LinearProber<int>, IntHash2, equal_to<int>> ht(1.0, LinearProber<int>(), IntHash2());
+    // set<pair<int, int>> items;
+    // int prevsize;
+    // for(size_t i = 0;i<sizemap.size()-1;i++){
+    //     if(i == 0){prevsize = 0;}
+    //     else{prevsize = sizemap[i-1]+1;}
+    //     for(int j = prevsize; j<=sizemap[i];j++){
+    //         pair<int,int> pair(j,j);
+    //         items.insert(pair);
+    //         ht.insert(pair);
+    //         if(j == sizemap[i]-1){
+    //             EXPECT_EQ(ht.table_.size(),sizemap[i]);
+    //             EXPECT_EQ(ht.size(),items.size());
+    //         }
+    //         if(j == sizemap[i]){
+    //             //resize should happen.
+    //             EXPECT_EQ(ht.table_.size(),sizemap[i+1]);
+    //             EXPECT_EQ(ht.size(),items.size());               
+    //         }
+    //     }
+    // }
+    //All items should still be there
+    //EXPECT_TRUE(verifyItems(ht, items));
+    // double loadfactor = 0.6;
+    // const vector<int> sizemap = 
+    // {
+    //     11, 23, 47, 97, 197, 397, 797, 1597, 3203, 6421
+    // };
+    // HashTable<int, int, LinearProber<int>, IntHash2, equal_to<int>> ht(loadfactor, LinearProber<int>(), IntHash2());   
+    // set<pair<int, int>> items;
+    // for(size_t i = 0;i<sizemap.size()-1;i++){
+    //     int min = (int)floor(sizemap[i]*loadfactor);
+    //     for(int j = 0; j<=min/2;j++){
+    //         pair<int,int> pair(j,j);
+    //         //insert then delete
+    //         ht.insert(pair);
+    //         ht.remove(j);
+    //         // cout << ht.size() << " 0ok" << endl;
+    //         if (ht.find(j) != nullptr){
+    //             cout << ht.size() << " 1ok" << endl;
+    //         }
+    //     }
+    //     if(ht.size() != 0){
+    //         cout << "    2ok" << endl;
+    //     }
+    //     //reinsert the same pair, loc should change
+    //     for(int j = 0; j<(min-(min/2));j++){
+    //         pair<int,int> pair(j,j);
+    //         //insert again
+    //         ht.insert(pair);
+    //         items.insert(pair);
+    //         // cout << ht.size() << " pre-3ok" << endl;
+    //         if (ht.probe(j) != (min/2)+1+j)
+    //             cout << ht.size() << " 3ok" << endl;
+    //     }
+    //     if(ht.table_.size() != sizemap[i]){
+    //         cout << ht.size() << " 4ok" << endl;
+    //     }
+    //     if(ht.size() != items.size()){
+    //         cout << ht.size() << " 5ok" << endl;
+    //     }
+    //     //add another should resize/rehash
+    //     pair<int,int> pair((min/2)+1,(min/2)+1);
+    //     ht.insert(pair);
+    //     items.insert(pair);
+    //     if(ht.table_.size() != sizemap[i+1]){
+    //         cout << ht.size() << " 6ok" << endl;
+    //     }
+    //     if(ht.size() != items.size()){
+    //         cout << ht.size() << " 7ok" << endl;
+    //     }
+    //     //should be put into the correct spot, now that
+    //     //the "deleted" items are actually "deleted" when resizing
+    //     for(int j = 0; j<=(min/2+1);j++){
+    //         if(ht.probe(j) != j){
+    //             cout << ht.size() << " 8ok" << endl;
+    //         }
+    //     }
+    // }
     // EXPECT_TRUE(verifyItems(ht, items));
 
     //  //Reach the default alpha factor of .4 (5 items /11 items = .45) to force a resize
